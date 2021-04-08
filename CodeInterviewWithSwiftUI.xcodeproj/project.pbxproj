@@ -11,6 +11,7 @@
 		E6763E0C261D615800191145 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6763E0B261D615800191145 /* ContentView.swift */; };
 		E6763E0E261D615900191145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6763E0D261D615900191145 /* Assets.xcassets */; };
 		E6763E11261D615900191145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6763E10261D615900191145 /* Preview Assets.xcassets */; };
+		E6763E19261D617800191145 /* TwoSumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6763E18261D617800191145 /* TwoSumsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		E6763E0D261D615900191145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E6763E10261D615900191145 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E6763E12261D615900191145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6763E18261D617800191145 /* TwoSumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoSumsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			children = (
 				E6763E09261D615800191145 /* CodeInterviewWithSwiftUIApp.swift */,
 				E6763E0B261D615800191145 /* ContentView.swift */,
+				E6763E18261D617800191145 /* TwoSumsView.swift */,
 				E6763E0D261D615900191145 /* Assets.xcassets */,
 				E6763E12261D615900191145 /* Info.plist */,
 				E6763E0F261D615900191145 /* Preview Content */,
@@ -138,6 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6763E19261D617800191145 /* TwoSumsView.swift in Sources */,
 				E6763E0C261D615800191145 /* ContentView.swift in Sources */,
 				E6763E0A261D615800191145 /* CodeInterviewWithSwiftUIApp.swift in Sources */,
 			);
