@@ -22,26 +22,32 @@ struct TwoSumsView: View {
     @State private var isEditing: Bool      = false
     @State private var arrayEntered: Bool   = false
 
+    private var defaultHStackSpace: CGFloat = 5
+    private var defaultVStackSpace: CGFloat = 20
+
 
     var body: some View {
-        VStack(alignment: .center, spacing: 20) {
-            Text("Welcome to Two Sums!")
-                .font(.title)
+        VStack(alignment: .center, spacing: 10) {
+            VStack(alignment: .center, spacing: 10) {
+                Text("Welcome to Two Sums!")
+                    .font(.title)
 
-            Text("Create an array of numbers")
-                .font(.headline)
+                Text("Create an array of numbers")
+                    .font(.headline)
 
-            Text("""
-            And then see if any of the numbers
-            can be combined to the desired sum
-            """)
-                .font(.headline)
-                .multilineTextAlignment(.center)
+                Text("""
+                     And then see if any of the numbers
+                     can be combined to the desired sum
+                     """)
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+            }
 
-            VStack(alignment: .leading, spacing: 40) {
+
+            VStack(alignment: .leading, spacing: 20) {
                 Spacer()
 
-                HStack(alignment: .lastTextBaseline, spacing: 20) {
+                HStack(alignment: .lastTextBaseline, spacing: 5) {
                     Text("""
                         Enter an array of positive, real numbers
                         (seperated by ", ") :
@@ -58,13 +64,14 @@ struct TwoSumsView: View {
                         print("Array: \(self.array)")
                         self.arrayEntered = true
                     }
+                    .keyboardType(.numbersAndPunctuation)
                 }
 
 
                 //
                 // This area displays the above entered array of strings as rounded Int's.
                 //
-                HStack(alignment: .lastTextBaseline, spacing: 20) {
+                HStack(alignment: .lastTextBaseline, spacing: 5) {
                     Text("Array: ")
                         .padding(5)
 
@@ -78,7 +85,7 @@ struct TwoSumsView: View {
                     //
                     // This area is for entering the desired sum.
                     //
-                    HStack(alignment: .lastTextBaseline, spacing: 0) {
+                    HStack(alignment: .lastTextBaseline, spacing: 5) {
 
                         Text("Desired sum:")
                             .padding(5)
@@ -91,9 +98,10 @@ struct TwoSumsView: View {
                         } onCommit: {
                             self.result = self.twoSumsUsingLowAndHighIndices(of: self.array, sum: self.desiredSum)
                         }
-                        //.frame(width: 100)
+                        .frame(width: 100)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .multilineTextAlignment(.trailing)
+                        .keyboardType(.numbersAndPunctuation)
                         .padding(5)
 
                     }
@@ -109,7 +117,7 @@ struct TwoSumsView: View {
                      */
 
 
-                    HStack(alignment: .lastTextBaseline, spacing: 10) {
+                    HStack(alignment: .lastTextBaseline, spacing: 5) {
                         Text("Solution:")
                             .padding(5)
 

@@ -27,6 +27,7 @@ struct ContentView: View {
                     .tag(TwoSumsView.tag)
                     .tabItem {
                         Text("2Sums")
+                            
                     }
             }
         }
