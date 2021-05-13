@@ -46,7 +46,7 @@ struct TwoSumsView: View {
 
             VStack(alignment: .leading) {
 
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("""
                         Enter an array of positive, real or integer numbers
                         (seperated by ", ") :
@@ -55,20 +55,25 @@ struct TwoSumsView: View {
                         .padding(.top, 100)
                         .padding(.leading, 5)
 
+
                     HStack(alignment: .lastTextBaseline, spacing: 5) {
-                        Text("Array: ")
+                        Text("Numbers: ")
+                            .frame(width: 100, alignment: .leading)
                             .padding(.leading, 5)
+                            .padding(.trailing, 20)
 
                         TextField("",
                                   text: $numberString)
                         { isEditing in
                             self.isEditing = isEditing
                         } onCommit: {
-                            //self.array = readArray(from: self.numberString)
                             self.array = readArrayEntry(from: self.numberString)
-                            print("Array: \(self.array)")
                             self.arrayEntered = true
                         }
+                        .frame(width: 250)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .multilineTextAlignment(.trailing)
+                        .minimumScaleFactor(0.5)
                         .keyboardType(.numbersAndPunctuation)
                         .padding(.leading, 5)
                     }
@@ -79,13 +84,28 @@ struct TwoSumsView: View {
                 // This area displays the above entered array of strings as rounded Int's.
                 //
                 HStack(alignment: .lastTextBaseline, spacing: 5) {
-                    Text("Your entry: ")
+                    Text("Your array: ")
+                        .frame(width: 100, height: 30, alignment: .leading)
+                        .padding([.top, .leading], 5)
+                        .padding(.trailing, 20)
+                        .padding(.top, 10)
+
+                    TextField("Your array will appear here.", text: $arrayString)
+                        .frame(width: 250)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .multilineTextAlignment(.trailing)
+                        .minimumScaleFactor(0.5)
+                        .disabled(true)
                         .padding(.leading, 5)
 
+                    /*
                     Text(arrayString)
+                        .frame(width: 250, height: 35, alignment: .trailing)
+                        .background(Color.gray).opacity(0.1)
+                        .multilineTextAlignment(.trailing)
+                        .minimumScaleFactor(0.25)
                         .padding(.leading, 5)
-                        .padding(.bottom, 20)
-
+                    */
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
@@ -95,8 +115,9 @@ struct TwoSumsView: View {
                     HStack(alignment: .lastTextBaseline, spacing: 5) {
 
                         Text("Desired sum:")
-                            .frame(width: 100)
+                            .frame(width: 100, alignment: .leading)
                             .padding(.leading, 5)
+                            .padding(.trailing, 20)
 
                         TextField("20",
                                   value: $desiredSum,
@@ -109,9 +130,8 @@ struct TwoSumsView: View {
                         .frame(width: 100, alignment: .trailing)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .multilineTextAlignment(.trailing)
-                        .keyboardType(.numberPad)
+                        .keyboardType(.numbersAndPunctuation)
                         .padding(.leading, 5)
-
                     }
 
 
@@ -119,9 +139,10 @@ struct TwoSumsView: View {
                         Text("Solution:")
                             .frame(width: 100, alignment: .leading)
                             .padding(.leading, 5)
+                            .padding(.trailing, 20)
 
                         Text(result ? resultString : "None")
-                            .frame(width: 100, alignment: .trailing)
+                            .frame(width: 150, alignment: .center)
                             .multilineTextAlignment(.trailing)
                             .padding(.leading, 5)
                     }
@@ -210,9 +231,7 @@ struct TwoSumsView: View {
         var intArray: [Int]     = []
 
         // Cast items in floatArray as Int.
-        for item in floatArray {
-            intArray.append(Int(item))
-        }
+        intArray = floatArray.compactMap { Int($0) }
 
         // Go ahead and strip-out any negative elements from
         intArray = intArray.filter{ $0 > 0 }
