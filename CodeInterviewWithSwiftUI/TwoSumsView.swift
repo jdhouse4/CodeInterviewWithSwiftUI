@@ -44,27 +44,34 @@ struct TwoSumsView: View {
             }
 
 
-            VStack(alignment: .leading, spacing: 20) {
-                Spacer()
+            VStack(alignment: .leading) {
 
-                HStack(alignment: .lastTextBaseline, spacing: 5) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text("""
-                        Enter an array of positive, real numbers
+                        Enter an array of positive, real or integer numbers
                         (seperated by ", ") :
                         """)
-                        .frame(width: 200)
-                        .padding(5)
+                        .frame(width: 400, alignment: .leading)
+                        .padding(.top, 100)
+                        .padding(.leading, 5)
 
-                    TextField("",
-                              text: $numberString)
-                    { isEditing in
-                        self.isEditing = isEditing
-                    } onCommit: {
-                        self.array = readArray(from: self.numberString)
-                        print("Array: \(self.array)")
-                        self.arrayEntered = true
+                    HStack(alignment: .lastTextBaseline, spacing: 5) {
+                        Text("Array: ")
+                            .padding(.leading, 5)
+
+                        TextField("",
+                                  text: $numberString)
+                        { isEditing in
+                            self.isEditing = isEditing
+                        } onCommit: {
+                            //self.array = readArray(from: self.numberString)
+                            self.array = readArrayEntry(from: self.numberString)
+                            print("Array: \(self.array)")
+                            self.arrayEntered = true
+                        }
+                        .keyboardType(.numbersAndPunctuation)
+                        .padding(.leading, 5)
                     }
-                    .keyboardType(.numbersAndPunctuation)
                 }
 
 
@@ -72,25 +79,26 @@ struct TwoSumsView: View {
                 // This area displays the above entered array of strings as rounded Int's.
                 //
                 HStack(alignment: .lastTextBaseline, spacing: 5) {
-                    Text("Array: ")
-                        .padding(5)
-
+                    Text("Your entry: ")
+                        .padding(.leading, 5)
 
                     Text(arrayString)
-                        .padding(5)
+                        .padding(.leading, 5)
+                        .padding(.bottom, 20)
 
                 }
 
-                VStack(alignment: .leading, spacing: 40) {
+                VStack(alignment: .leading, spacing: 10) {
                     //
                     // This area is for entering the desired sum.
                     //
                     HStack(alignment: .lastTextBaseline, spacing: 5) {
 
                         Text("Desired sum:")
-                            .padding(5)
+                            .frame(width: 100)
+                            .padding(.leading, 5)
 
-                        TextField("50",
+                        TextField("20",
                                   value: $desiredSum,
                                   formatter: NumberFormatter())
                         { isEditing in
@@ -98,32 +106,24 @@ struct TwoSumsView: View {
                         } onCommit: {
                             self.result = self.twoSumsUsingLowAndHighIndices(of: self.array, sum: self.desiredSum)
                         }
-                        .frame(width: 100)
+                        .frame(width: 100, alignment: .trailing)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .multilineTextAlignment(.trailing)
-                        .keyboardType(.numbersAndPunctuation)
-                        .padding(5)
+                        .keyboardType(.numberPad)
+                        .padding(.leading, 5)
 
                     }
 
 
-                    /*
-                     HStack(alignment: .lastTextBaseline, spacing: 10) {
-                     Text("Result:")
-
-                     Text(String(self.result))
-                     .frame(width: 120, alignment: .trailing)
-                     }
-                     */
-
-
                     HStack(alignment: .lastTextBaseline, spacing: 5) {
                         Text("Solution:")
-                            .padding(5)
+                            .frame(width: 100, alignment: .leading)
+                            .padding(.leading, 5)
 
                         Text(result ? resultString : "None")
-                            //.frame(width: 100, alignment: .trailing)
-                            .padding(5)
+                            .frame(width: 100, alignment: .trailing)
+                            .multilineTextAlignment(.trailing)
+                            .padding(.leading, 5)
                     }
                 }
                 .opacity(self.arrayEntered ? 1 : 0.5)
@@ -136,41 +136,117 @@ struct TwoSumsView: View {
 
 
 
-    func readArray(from string: String) -> [Int] {
+    fileprivate func createStringArray(from string: String) -> [String] {
         print("Initial array: \(string)")
 
-        let characterSet    = CharacterSet(charactersIn: ", ")
+        // Create a CharacterSet of items to remove from the string that shouldn't be there.
+        // Please remember that CharacterSet is NOT a set of characters. It is instead a set of
+        // UnicodeScalars. It should have been called UnicodeScalarSet. Due to history, this wasn't done. :-(
+        var disallowedCharacters    = CharacterSet()
+        disallowedCharacters.formUnion(.capitalizedLetters)
+        disallowedCharacters.formUnion(.lowercaseLetters)
+        disallowedCharacters.formUnion(.letters)
+        disallowedCharacters.insert(charactersIn: "!@#$%^&*()")
 
-        var stringArray     = string.components(separatedBy: characterSet)
+        // Create a mutable copy of the entry string.
+        var newString   = string
+
+        // Now remove the disallowedCharacters from the mutated copy of string, which is newString.
+        newString.unicodeScalars.removeAll(where: { disallowedCharacters.contains($0) })
+        print("Cleaned-up string entry: \(newString)")
+
+
+        // Create character set to use for seperating items in string with a "," and one space, ", ".
+        let commaCharacterSet   = CharacterSet(charactersIn: ", ")
+
+        var stringArray         = newString.components(separatedBy: commaCharacterSet)
         print("stringArray: \(stringArray)")
 
-        // Clean-up by removing any "" from stringArray
+
+        // Clean-up by removing any "" from stringArray that are put in by reading with .components.
+        // For example, reading the input of 1, 2, 3 entered into the textField will result in
+        // ["1", "", "2", "", "3"]. This call results in cleaning-up and returning ["1", "2", "3"].
         stringArray.removeAll(where: { $0 == "" })
+        print("Cleaned-up stringArray: \(stringArray)")
 
-        // This converts string array elements into rounded Floats in case the user entered a float.
+        return stringArray
+    }
+
+
+
+    fileprivate func createRoundedFloatArray(from stringArray: [String]) -> [Float] {
+        // This converts string array elements into an array of rounded Floats in case the user entered Floats.
         var floatArray: [Float] = []
-        for item in stringArray {
-            floatArray.append(Float(item)?.rounded(.toNearestOrAwayFromZero) ?? 0)
-        }
 
+
+        // This...
+        floatArray = stringArray.compactMap{ round(Float($0) ?? 0) }
+
+        // does this! Pretty cool!
+        /*
+        for item in stringArray {
+            //floatArray.append(Float(item)?.rounded(.toNearestOrAwayFromZero) ?? 0)
+            floatArray.append(round(Float(item) ?? 0))
+        }
+        */
+
+
+        /*
+        var positiveDoubles: [Double] = []
+        positiveDoubles = stringArray.compactMap{ round(Double($0) ?? 0) }
+
+        var intArray: [Int] = []
+        intArray = positiveDoubles.compactMap{ Int(round(Double($0))) }
+        */
+
+        return floatArray
+    }
+
+
+
+    fileprivate func createSortedUnsignedIntArray(from floatArray: [Float]) -> [Int] {
         // This converts the Float array elements into Ints, which is the desired final output.
+        // The Int array is then sorted.
         var intArray: [Int]     = []
 
+        // Cast items in floatArray as Int.
         for item in floatArray {
             intArray.append(Int(item))
         }
 
-        intArray.sort()
+        // Go ahead and strip-out any negative elements from
+        intArray = intArray.filter{ $0 > 0 }
 
-        //self.arrayString = stringArray
+        intArray.sort()
+        print("Array of Int's: \(intArray)")
+
+        return intArray
+    }
+
+
+
+    fileprivate func displayArrayString(from intArray: [Int]) {
+        // This creates a new String representation of an [Int].
         var someString = "["
         let stringOfNumbers = intArray.map { String($0) }
             .joined(separator: ", ")
         someString = "[" + stringOfNumbers + "]"
-        self.arrayString = someString
-        //print("Resuling array: \(self.arrayString)")
+        print("Resuling array: \(someString)")
 
-        print("Resultant Array of Int's: \(intArray)")
+        // arrayString is a @State variable that will let the user know how their entry looks.
+        self.arrayString = someString
+    }
+
+
+
+    func readArrayEntry(from string: String) -> [Int] {
+        let stringArray: [String]   = createStringArray(from: string)
+
+        let floatArray: [Float]     = createRoundedFloatArray(from: stringArray)
+
+        let intArray: [Int]         = createSortedUnsignedIntArray(from: floatArray)
+
+        displayArrayString(from: intArray)
 
         return intArray
     }
