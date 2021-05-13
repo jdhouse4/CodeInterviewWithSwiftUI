@@ -28,6 +28,7 @@ struct TwoSumsView: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
+
             VStack(alignment: .center, spacing: 10) {
                 Text("Welcome to Two Sums!")
                     .font(.title)
@@ -97,16 +98,8 @@ struct TwoSumsView: View {
                         .minimumScaleFactor(0.5)
                         .disabled(true)
                         .padding(.leading, 5)
-
-                    /*
-                    Text(arrayString)
-                        .frame(width: 250, height: 35, alignment: .trailing)
-                        .background(Color.gray).opacity(0.1)
-                        .multilineTextAlignment(.trailing)
-                        .minimumScaleFactor(0.25)
-                        .padding(.leading, 5)
-                    */
                 }
+
 
                 VStack(alignment: .leading, spacing: 10) {
                     //
