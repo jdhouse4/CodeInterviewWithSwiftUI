@@ -52,7 +52,7 @@ struct TwoSumsView: View {
                         Enter an array of positive, real or integer numbers
                         (seperated by ", ") :
                         """)
-                        .frame(width: 400, alignment: .leading)
+                        .frame(width: 350, alignment: .leading)
                         .padding(.top, 100)
                         .padding(.leading, 5)
 
@@ -71,7 +71,7 @@ struct TwoSumsView: View {
                             self.array = readArrayEntry(from: self.numberString)
                             self.arrayEntered = true
                         }
-                        .frame(width: 250)
+                        .frame(width: 225)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .multilineTextAlignment(.trailing)
                         .minimumScaleFactor(0.5)
@@ -92,7 +92,7 @@ struct TwoSumsView: View {
                         .padding(.top, 10)
 
                     TextField("Your array will appear here.", text: $arrayString)
-                        .frame(width: 250)
+                        .frame(width: 225)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .multilineTextAlignment(.trailing)
                         .minimumScaleFactor(0.5)
